@@ -1,0 +1,38 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.vanbran.booklist2"
+    android:versionCode="2"
+    android:versionName="2.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15" />
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+	
+	<application 
+	    android:icon="@drawable/database36" 
+	    android:label="@string/app_name">
+	    <activity android:name="com.dropbox.client2.android.AuthActivity"
+	                        android:launchMode="singleTask" android:configChanges="orientation|keyboard">
+	                        <intent-filter>
+	                                <!-- Change this to be db- followed by your app key -->
+	                                <data android:scheme="db-imd5mawa9ttpi7v" />
+	                                <action android:name="android.intent.action.VIEW" />
+	                                <category android:name="android.intent.category.BROWSABLE" />
+	                                <category android:name="android.intent.category.DEFAULT" />
+	                        </intent-filter>
+	                </activity>
+	       
+        <activity android:name="BookListMainAct" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+		<activity android:name=".ShowList" android:label="@string/app_name"></activity>
+		<activity android:name=".LoadXML" android:label="@string/app_name"></activity>     			      
+		<activity android:name=".about" android:label="@string/app_name"></activity>	
+		<activity android:name=".DropboxMain" android:label="@string/app_name"></activity>		
+    </application>
+</manifest>
