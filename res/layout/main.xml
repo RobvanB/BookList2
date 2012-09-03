@@ -4,11 +4,11 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 android:id="@+id/relativeLayout1" 
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
-android:padding="10px">
+android:padding="10dp">
 
 <TextView
     android:id="@+id/counterText"
-    android:layout_width="250px"
+    android:layout_width="250dp"
     android:layout_height="fill_parent"
     android:text="Number of records in DB: " >
 
@@ -28,7 +28,7 @@ android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 android:orientation="vertical"
 android:layout_below="@id/relativeLayout1"
-android:layout_marginTop="30px"
+android:layout_marginTop="30dp"
 >
 
 <TableLayout
@@ -80,10 +80,10 @@ android:textSize="18sp"
 >
 </EditText>
 <Button
-android:id="@+id/Insert"
+android:id="@+id/GetFile"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="Insert"
+android:text="Get updated XML file"
 >
 </Button>
 <Button
