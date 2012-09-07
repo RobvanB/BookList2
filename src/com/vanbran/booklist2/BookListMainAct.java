@@ -6,11 +6,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.DropBoxManager.Entry;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
@@ -41,6 +46,8 @@ public class BookListMainAct extends Activity {
 	EditText statusFld;
 	TextView counterFld;
 	
+	protected ProgressDialog pd;
+	
 	public static final File newXml = new File(Environment.getExternalStorageDirectory() , "dcandroidexport.xml"); 
 	final static private String dbPath 	= "/dcexport.xml";
 	
@@ -53,7 +60,7 @@ public class BookListMainAct extends Activity {
 	final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
 	private DropboxAPI<AndroidAuthSession> mDBApi;
     	
-    	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) 
     {
     	try
@@ -170,33 +177,102 @@ public class BookListMainAct extends Activity {
     private OnClickListener mAddListenerGetFile = new OnClickListener() {
 	
     	public void onClick(View v){
-
-		// Get a new XML file to load in the db
-		FileOutputStream outputStream = null;
-		try {
-		    	outputStream = new FileOutputStream(newXml);
-    		    DropboxFileInfo info = mDBApi.getFile(dbPath, null, outputStream, null);
-    		    Log.i("BookListLog", "The file's rev is: " + info.getMetadata().rev);
-    		    // /path/to/new/file.txt now has stuff in it.
-    		} 
-			//catch (DropboxException e) 
-    		catch (Exception ex)	
-    		{
-    			Context context = getApplicationContext();
-        		CharSequence text = ex.toString();
-        		int duration = 50000 ; //Toast.LENGTH_LONG;
-        		
-        		Toast toast = Toast.makeText(context, text, duration);
-        		toast.show();
-    		} finally {
-    		    if (outputStream != null) {
-    		        try {
-    		            outputStream.close();
-    		        } catch (IOException e) {}
-    		    }
-    		}
+    		new getFile().execute();
+		
     	}
-    };
+    	};
+
+    
+	private class getFile extends AsyncTask<Void, Integer, Boolean> 
+	{
+		private ProgressDialog dialog = new ProgressDialog(BookListMainAct.this);
+		Exception err = null;
+		
+		protected void onPreExecute()
+		{
+		   super.onPreExecute();
+		        this.dialog.setMessage("Loading...");
+		        this.dialog.show();    
+		}
+		
+		protected void onPostExecute(Boolean result)
+ 		{
+			if (dialog.isShowing())
+ 			{
+ 				dialog.dismiss();
+ 			}
+			
+			if (this.err != null)
+			{
+				Context context = getApplicationContext();
+	     		CharSequence text = err.toString();
+	     		int duration = 50000 ; //Toast.LENGTH_LONG;
+	     		
+	     		Toast toast = Toast.makeText(context, text, duration);
+	     		toast.show();
+			}
+ 		}
+		
+		
+//		protected void onProgressUpdate(Integer... progress) 
+// 		{
+// 			OptionPane.showMessage("BookListMainAct, "ERROR", err.getMessage());
+// 		}
+		
+		protected Boolean doInBackground(Void... params) 
+		{
+			// Get a new XML file to load in the db
+			FileOutputStream outputStream = null;
+
+			try 
+	 		{
+				String fname = "";
+		    	outputStream = new FileOutputStream(newXml);
+		    	//Since we are using access_type=folder, the file will be in 
+		    	// /Apps/BookList2 (which is considered the root for this application
+		    	// dbPath = /dcexport.xml 
+	 		    DropboxFileInfo info = mDBApi.getFile(dbPath, null, outputStream, null);
+	 		    //Log.i("BookListLog", "The file's rev is: " + info.getMetadata().rev);
+	 		    // /path/to/new/file.txt now has stuff in it.
+//	 		    com.dropbox.client2.DropboxAPI.Entry myEntry = mDBApi.metadata("/",100, null, true, null);
+//		    	for(com.dropbox.client2.DropboxAPI.Entry e : myEntry.contents )
+//		    	{
+//		    		if (!e.isDeleted)
+//		    		{
+//		    			fname = e.fileName();
+//		    		}
+//		    	}
+	 		    
+		    	publishProgress();
+	 		} 
+			//catch (DropboxException e) 
+	 		catch (Exception ex)	
+	 		{
+//	 			Context context = getApplicationContext();
+//	     		CharSequence text = ex.toString();
+//	     		int duration = 50000 ; //Toast.LENGTH_LONG;
+//	     		
+//	     		Toast toast = Toast.makeText(context, text, duration);
+//	     		toast.show();
+	 			this.err = ex ;
+	 		} finally 
+	 		{
+	 			if (dialog.isShowing())
+	 			{
+	 				dialog.dismiss();
+	 			}
+	 		    if (outputStream != null) 
+	 		    {
+	 		        try 
+	 		        {
+	 		            outputStream.close();
+	 		        } catch (IOException e) {}
+	 		    }
+	 		}	
+	 		return true;
+		}
+	}
+    
 
     //Create an anonymous implementation of OnClickListener for the Search
     private OnClickListener mAddListenerSearch = new OnClickListener() {
@@ -285,18 +361,18 @@ public class BookListMainAct extends Activity {
     private void DropBoxAuthenticate()
     {
     	SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
-    	APP_KEY 	= prefs.getString(ACCESS_KEY_NAME, "");
-    	APP_SECRET 	= prefs.getString(ACCESS_SECRET_NAME, "");
+    	//APP_KEY 	= prefs.getString(ACCESS_KEY_NAME, "");
+    	//APP_SECRET 	= prefs.getString(ACCESS_SECRET_NAME, "");
     	
     	AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
     	AndroidAuthSession session = new AndroidAuthSession(appKeys, ACCESS_TYPE);
     	mDBApi = new DropboxAPI<AndroidAuthSession>(session);
     	
     	//check if we are already authenticated
-    	if (session.getAccessTokenPair() != null) 
+    	if (session.getAccessTokenPair() == null)
     	{
-	    	//Start the Authentication
-	    	mDBApi.getSession().startAuthentication(BookListMainAct.this);
+    		//Start the Authentication
+    		mDBApi.getSession().startAuthentication(BookListMainAct.this);
     	}
     }
   
