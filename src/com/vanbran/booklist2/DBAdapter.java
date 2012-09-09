@@ -1,3 +1,10 @@
+/*
+Developed by Rob vanBrandenburg (RobvanB@gmail.com)
+More info can be found at the Project page (https://github.com/RobvanB/BookList2)
+Check out the Wiki for documentation. 
+Please report bugs and feature requests. 
+Icons provided by AndroidIcons.
+*/
 package com.vanbran.booklist2;
 
 import android.content.ContentValues;
@@ -11,16 +18,15 @@ import android.util.Log;
 
 public class DBAdapter 
 {
-//	public static final String KEY_ROWID = "_id";
 //	public static final String KEY_YEAROFREWARDS = "YearOfRewards";
 //	public static final String KEY_MONTHOFREWARDS = "MonthOfRewards";
 //	public static final String KEY_DAYOFREWARDS = "DayOfRewards";
 //	public static final String KEY_NUMOFREWARDS = "NumOfRewards";
-	private static final String TAG = "DBAdapter";
-	
-	private static final String DB_NAME = "BookList";
-	private static final String DB_TABLE = "tblBookList";
-	private static final int DB_VERSION = 5;
+
+	private static final String TAG 		= "DBAdapter";
+	private static final String DB_NAME 	= "BookList";
+	private static final String DB_TABLE 	= "tblBookList";
+	private static final int 	DB_VERSION 	= 5;
 	
 	private static final String DATABASE_CREATE =
 		"create table " + DB_TABLE + " (_id integer primary key autoincrement, " +
@@ -29,10 +35,9 @@ public class DBAdapter
 		"Status text not null, " +
 		"dcId text not null);" ;
 	
-	private final Context context;
-	
-	private DatabaseHelper DbHelper;
-	private SQLiteDatabase db;
+	private final 	Context 		context;
+	private 		DatabaseHelper 	DbHelper;
+	private 		SQLiteDatabase 	db;
 	
 	
 	public DBAdapter(Context ctx)
@@ -93,8 +98,6 @@ public class DBAdapter
 	{
 		String qStr = "SELECT * FROM " + DB_TABLE + " WHERE Author like " + _Author + " AND Title like " +
 						_Title  + " AND Status like " + _Status ;
-		
-		//String qStr = "SELECT * FROM " + DB_TABLE ; 
 		
 		Cursor cursor = db.rawQuery(qStr, null);
 		return cursor ;

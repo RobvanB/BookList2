@@ -1,0 +1,12 @@
+This is the second version of the BookList application.
+Original project: https://github.com/RobvanB/BookList
+New version: https://github.com/RobvanB/BookList2
+
+The app loads an XML file with books from the DataCrow application (http://datacrow.net).
+The file is picked up from DropBox. The File needs to be called dcexport.xml and needs to be located in the 
+application folder of your dropbox account (/apps/BookList2/dcexport.xml)
+
+This version has the following changes:
+* Uses the new DropBox API that uses oAuth and app folder
+* User can add wildcards at begin and end of search through check boxes
+* Function to add records removed - this served no purpose

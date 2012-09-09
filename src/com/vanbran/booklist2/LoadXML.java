@@ -1,3 +1,11 @@
+/*
+Developed by Rob vanBrandenburg (RobvanB@gmail.com)
+More info can be found at the Project page (https://github.com/RobvanB/BookList2)
+Check out the Wiki for documentation. 
+Please report bugs and feature requests. 
+Icons provided by AndroidIcons.
+*/
+
 package com.vanbran.booklist2;
 
 import java.io.File;
@@ -12,7 +20,6 @@ import android.database.Cursor;
 
 public class LoadXML 
 {
-	
 	long 		id 				= 0;
 	int  		rowsInserted 	= 0;
 	int  		rowsUpdated  	= 0;
@@ -57,14 +64,7 @@ public class LoadXML
 	throws XmlPullParserException, IOException
 	{
 		final File newXml = BookListMainAct.newXml ;		
-		//final Activity thisActivity = activity ;
-		
-		//ProgressBar	pBar ;
-				
-		//setContentView(R.layout.load);
-		
-		//pBar = (ProgressBar) findViewById(R.id.ProgressBar);
-	
+
 		String titleStr  = "" ;
 		String authorStr = "" ;
 		String statusStr = "" ;
@@ -72,8 +72,8 @@ public class LoadXML
 		String tagName   = "" ;
 		
 		//Parse the xml
-		XmlPullParserFactory  xppf = XmlPullParserFactory.newInstance() ;
-		XmlPullParser xpp = xppf.newPullParser();
+		XmlPullParserFactory  	xppf 	= XmlPullParserFactory.newInstance() ;
+		XmlPullParser 			xpp 	= xppf.newPullParser();
 		xpp.setInput(new FileReader(newXml));
 		xpp = nextTag(xpp);
 		/*
@@ -208,15 +208,6 @@ public class LoadXML
 			{
 				cursor.close();	
 			}
-			
-			/*
-			Context context = getApplicationContext();
-    		CharSequence text = "Record with id " + id + " loaded to DB.";
-    		int duration = Toast.LENGTH_SHORT;
-    		
-    		Toast toast = Toast.makeText(context, text, duration);
-    		toast.show();
-    		*/			
 		}
 		catch(Exception ex)
 		{

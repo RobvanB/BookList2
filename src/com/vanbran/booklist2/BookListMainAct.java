@@ -1,14 +1,19 @@
+/*
+Developed by Rob vanBrandenburg (RobvanB@gmail.com)
+More info can be found at the Project page (https://github.com/RobvanB/BookList2)
+Check out the Wiki for documentation. 
+Please report bugs and feature requests. 
+Icons provided by AndroidIcons.
+*/
+
 package com.vanbran.booklist2;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import android.R.string;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,27 +22,23 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.DropBoxManager.Entry;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.DropboxAPI.DropboxFileInfo;
 import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
-
-
 
 public class BookListMainAct extends Activity {
     /** Called when the activity is first created. */
@@ -48,19 +49,20 @@ public class BookListMainAct extends Activity {
 	EditText statusFld;
 	TextView counterFld;
 	
-	protected ProgressDialog pd;
-	
-	public static final File newXml = new File(Environment.getExternalStorageDirectory() , "dcandroidexport.xml"); 
-	final static private String dbPath 	= "/dcexport.xml";
-	final static private int tstDuration = 70000 ; 
+	public 	static final   File 	newXml 			= new File(Environment.getExternalStorageDirectory() , "dcandroidexport.xml"); 
+	final 	static private String 	dbPath 			= "/dcexport.xml";
+	final 	static private int 		tstDuration 	= 70000 ; 
+	boolean							srchPreChecked	= false ;
+	boolean							srchPostChecked = false ;
 	
 	//DropBox
-	final static private AccessType ACCESS_TYPE = AccessType.APP_FOLDER ;
-	final static private String APP_KEY = "imd5mawa9ttpi7v";
-	final static private String APP_SECRET = "t6u7e4we1vxnupb";
-	final static private String ACCOUNT_PREFS_NAME = "prefs";
-	final static private String ACCESS_KEY_NAME = "ACCESS_KEY";
-	final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
+	final static private AccessType ACCESS_TYPE 		= AccessType.APP_FOLDER ;
+	final static private String 	APP_KEY 			= "imd5mawa9ttpi7v";
+	final static private String 	APP_SECRET 			= "t6u7e4we1vxnupb";
+	final static private String 	ACCOUNT_PREFS_NAME 	= "prefs";
+	final static private String 	ACCESS_KEY_NAME 	= "ACCESS_KEY";
+	final static private String 	ACCESS_SECRET_NAME 	= "ACCESS_SECRET";
+	
 	private DropboxAPI<AndroidAuthSession> mDBApi;
     	
     @Override
@@ -80,9 +82,6 @@ public class BookListMainAct extends Activity {
     		//Register the onClick listener
     		getFileButton.setOnClickListener(mAddListenerGetFile);
     		
-    		Button removeKeysButton = (Button)findViewById(R.id.RemoveKeys);
-    		removeKeysButton.setOnClickListener(mAddListenerRemoveKeys);
-    		
     		//Authenticate against DropBox
     		DropBoxAuthenticate();
     		
@@ -91,9 +90,8 @@ public class BookListMainAct extends Activity {
     	{
     		Context context = getApplicationContext();
     		CharSequence text = ex.toString();
-    		int duration = 50000 ; //Toast.LENGTH_LONG;
-    		
-    		Toast toast = Toast.makeText(context, text, duration);
+    		    		
+    		Toast toast = Toast.makeText(context, text, tstDuration);
     		toast.show();
     	}
     }
@@ -117,13 +115,13 @@ public class BookListMainAct extends Activity {
 
                 // Store the keys
                 storeKeys(tokens.key, tokens.secret);
-            } catch (IllegalStateException ex) {
-                //Log.i("DbAuthLog", "Error authenticating", e);
-            	Context context = getApplicationContext();
+            } 
+            catch (IllegalStateException ex) 
+            {
+               	Context context = getApplicationContext();
         		CharSequence text = ex.toString();
-        		int duration = 50000 ; //Toast.LENGTH_LONG;
-        		
-        		Toast toast = Toast.makeText(context, "Authentication Error: " + text, duration);
+        	        		
+        		Toast toast = Toast.makeText(context, "Authentication Error: " + text, tstDuration);
         		toast.show();
             }
         }
@@ -144,7 +142,23 @@ public class BookListMainAct extends Activity {
     {
     	switch (item.getItemId())
     	{
-    		case R.id.about: 
+	    	case R.id.RemoveKeys: 
+				try
+	    		{
+					removeKeys();
+					Toast toast = Toast.makeText(getApplicationContext(), "Access Keys removed", tstDuration);
+					toast.show();
+						
+	    		}
+	    		catch(Exception ex)
+	    		{
+	    			Context context = getApplicationContext();
+	    			CharSequence text = ex.toString();
+	    			        			
+	    			Toast toast = Toast.makeText(context, text, tstDuration);
+	    			toast.show();
+	    		}	
+	    	case R.id.about: 
     			try
         		{
         			Intent intent = new Intent(BookListMainAct.this, about.class);
@@ -154,23 +168,14 @@ public class BookListMainAct extends Activity {
         		{
         			Context context = getApplicationContext();
         			CharSequence text = ex.toString();
-        			int duration = Toast.LENGTH_LONG ;
-        			
-        			Toast toast = Toast.makeText(context, text, duration);
+        			        			
+        			Toast toast = Toast.makeText(context, text, tstDuration);
         			toast.show();
         		}
         		break;            		
     	}
     	return true;
     }
-    
-    //Create an anonymous implementation of OnClickListener for resetting the keys
-    private OnClickListener mAddListenerRemoveKeys = new OnClickListener() {
-	
-    	public void onClick(View v){
-    		removeKeys();
-    		}
-    	};
     
     //Create an anonymous implementation of OnClickListener for the Search
     private OnClickListener mAddListenerSearch = new OnClickListener() {
@@ -183,14 +188,27 @@ public class BookListMainAct extends Activity {
     		//Do something when the button is clicked
     		db.open();
     		try{
-    			titleFld = (EditText)findViewById(R.id.TitleVal);
-    			authorFld = (EditText)findViewById(R.id.AuthorVal);
-    			statusFld = (EditText)findViewById(R.id.StatusVal);
+    			titleFld 	= (EditText)findViewById(R.id.TitleVal);
+    			authorFld 	= (EditText)findViewById(R.id.AuthorVal);
+    			statusFld 	= (EditText)findViewById(R.id.StatusVal);
     		
-    			titleStr = titleFld.getText().toString() ;
-    			authorStr = authorFld.getText().toString();
-    			statusStr = statusFld.getText().toString();
+    			titleStr 	= titleFld.getText().toString() ;
+    			authorStr 	= authorFld.getText().toString();
+    			statusStr 	= statusFld.getText().toString();
     		
+    			if (srchPreChecked)
+				{
+					titleStr 	= "%" + titleStr  ;
+					authorStr 	= "%" + authorStr ;
+					statusStr 	= "%" + statusStr ;
+				}
+    			if (srchPostChecked)
+				{
+					titleStr 	= titleStr  + "%";
+					authorStr 	= authorStr + "%";
+					statusStr 	= statusStr + "%";
+				}
+    			
     			if (titleStr.length() == 0)
     			{
     				titleStr = "'%'";
@@ -203,14 +221,14 @@ public class BookListMainAct extends Activity {
     				authorStr = "'%'";
     			}else
     			{
-    				authorStr = "'" + titleStr + "'";
+    				authorStr = "'" + authorStr + "'";
     			}
     			if(statusStr.length() == 0)
     			{
     				statusStr = "'%'";
     			}else
     			{
-    				statusStr = "'" + titleStr + "'";
+    				statusStr = "'" + statusStr + "'";
     			}
     				
     			Intent intent = new Intent(BookListMainAct.this, ShowList.class);
@@ -223,14 +241,28 @@ public class BookListMainAct extends Activity {
     		{
     			Context context = getApplicationContext();
     			CharSequence text = ex.toString() ;
-    			int duration = 500000; //Toast.LENGTH_LONG ;
-    			
-    			Toast toast = Toast.makeText(context, text, duration);
+    			    			
+    			Toast toast = Toast.makeText(context, text, tstDuration);
     			toast.show();
     		}
     		db.close();
     	}
     };
+    
+    //Handle the checkbox settings for the search
+    public void onCheckboxClicked(View v)
+    {
+    	boolean checked = ((CheckBox) v).isChecked() ;
+    	switch(v.getId())
+    	{
+    		case R.id.srchPre:
+    			srchPreChecked = checked ;
+    			break;
+    		case R.id.srchPost:
+    			srchPostChecked = checked ;
+    			break;
+    	}
+    }
     
     //Create an anonymous implementation of OnClickListener for getting an updated XML file
     private OnClickListener mAddListenerGetFile = new OnClickListener() {
@@ -255,9 +287,8 @@ public class BookListMainAct extends Activity {
 		{
     		Context context = getApplicationContext();
     		CharSequence text = ex.toString();
-    		int duration = 50000 ; //Toast.LENGTH_LONG;
-    		
-    		Toast toast = Toast.makeText(context, text, duration);
+    		    		
+    		Toast toast = Toast.makeText(context, text, tstDuration);
     		toast.show();
     	}
 		return counted;
@@ -318,13 +349,10 @@ public class BookListMainAct extends Activity {
 		toast.show();
 		
 		//Restart the main activity
-		Intent i = getApplicationContext().getPackageManager()
-				 .getLaunchIntentForPackage(getApplicationContext().getPackageName() );
-
-				 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-				 startActivity(i);
+		Intent i = getApplicationContext().getPackageManager().getLaunchIntentForPackage(getApplicationContext().getPackageName());
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+		startActivity(i);
     }
-
      
     // *** SubClass ***
     //Pull the file from the dropbox server 
@@ -352,13 +380,14 @@ public class BookListMainAct extends Activity {
 				toast.show();
   			}else
   			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(BookListMainAct.this);
+				//Show a status dialog when we are done
+  				AlertDialog.Builder builder = new AlertDialog.Builder(BookListMainAct.this);
 				builder.setMessage(msg).setCancelable(false);
 			    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() 
 			    {
 			    	public void onClick(DialogInterface dialog, int id) 
 		           {
-		        	   //BookListMainAct.this.finish();
+		        	   //BookListMainAct.this.finish(); //Don't need to do anything when the user clicks 'ok'
 		           }
 			    });
 				AlertDialog alert = builder.create();		
@@ -368,10 +397,9 @@ public class BookListMainAct extends Activity {
   		
   		protected void onProgressUpdate(Integer... progress) 
    		{
-   			this.dbxDialog.setMessage("Loading new file in DataBase...");
+   			//Change the message in the running dialog to show second step is started
+  			this.dbxDialog.setMessage("Loading new file in DataBase...");
   		}
-  		
-  		
 
   		protected Boolean doInBackground(Void... params) 
   		{
@@ -391,8 +419,7 @@ public class BookListMainAct extends Activity {
 	   			
 	   			if (this.err == null)
 	   			{
-   				
-		   			//Now load the file into the DB
+   					//Now load the file into the DB
 		   			try
 	   	    		{
 	   					LoadXML loadXML = new LoadXML() ;
@@ -414,7 +441,6 @@ public class BookListMainAct extends Activity {
 	   			}
 	   			publishProgress();
   	 		} 
-  			//catch (DropboxException e) 
   	 		catch (Exception ex)	
   	 		{
   	 			this.err = ex ; //Can't use Toast as we are in a background thread - pull the error when we are back in the main UI thread

@@ -1,109 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/relativeLayout1" 
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:padding="10dp">
-
-<TextView
-    android:id="@+id/counterText"
-    android:layout_width="250dp"
-    android:layout_height="fill_parent"
-    android:text="@string/NumRec" >
-
-</TextView>
-
-<TextView
-android:id="@+id/counterVal"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:layout_toRightOf="@id/counterText"
-android:text="@string/XX">
-</TextView>
-
-<LinearLayout
-android:id="@+id/mainLayout"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:orientation="vertical"
-android:layout_below="@id/relativeLayout1"
-android:layout_marginTop="30dp"
->
-
-<TableLayout
-android:id="@+id/mainTableLayout"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:orientation="vertical"
->
-
-<TextView
-android:id="@+id/Title"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="@string/Title"
->
-</TextView>
-<EditText
-android:id="@+id/TitleVal"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:textSize="18sp"
-android:inputType="text"
->
-</EditText>
-<TextView
-android:id="@+id/Author"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="@string/Author"
->
-</TextView>
-<EditText
-android:id="@+id/AuthorVal"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:textSize="18sp"
-android:inputType="text"
->
-</EditText>
-<TextView
-android:id="@+id/Status"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="@string/Status"
->
-</TextView>
-<EditText
-android:id="@+id/StatusVal"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:textSize="18sp"
-android:inputType="text"
->
-</EditText>
-<Button
-android:id="@+id/GetFile"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="@string/GetFile"
->
-</Button>
-<Button
-android:id="@+id/Search"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="@string/Search"
->
-</Button>
-<Button
-android:id="@+id/RemoveKeys"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="@string/RemoveKeys"
->
-</Button>
-</TableLayout>
-</LinearLayout>
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/relativeLayout1" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:padding="10dp">
+	<TextView
+	    android:id="@+id/counterText"
+	    android:layout_width="250dp"
+	    android:layout_height="fill_parent"
+	    android:text="@string/NumRec" >
+	</TextView>
+	<TextView
+		android:id="@+id/counterVal"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_toRightOf="@id/counterText"
+		android:text="@string/XX">
+	</TextView>
+	<LinearLayout
+		android:id="@+id/mainLayout"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		android:layout_below="@id/relativeLayout1"
+		android:layout_marginTop="30dp"
+	>
+		<TextView
+			android:id="@+id/Title"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/Title"
+			>
+		</TextView>
+		<EditText
+			android:id="@+id/TitleVal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:textSize="18sp"
+			android:inputType="text"
+			>
+		</EditText>
+		<TextView
+			android:id="@+id/Author"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/Author"
+			>
+		</TextView>
+		<EditText
+			android:id="@+id/AuthorVal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:textSize="18sp"
+			android:inputType="text"
+			>
+		</EditText>
+		<TextView
+			android:id="@+id/Status"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/Status"
+			>
+		</TextView>
+		<EditText
+			android:id="@+id/StatusVal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:textSize="18sp"
+			android:inputType="text"
+			>
+		</EditText>
+		<Button
+			android:id="@+id/GetFile"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/GetFile"
+			>
+		</Button>
+		<Button
+			android:id="@+id/Search"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/Search"
+			>
+		</Button>
+		<CheckBox 
+		    android:id="@+id/srchPre"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/srchPre"
+		    android:onClick="onCheckboxClicked"
+		    />		
+		<CheckBox 
+		    android:id="@+id/srchPost"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/srchPost"
+		    android:onClick="onCheckboxClicked"
+		    />		
+	</LinearLayout>
 </RelativeLayout>

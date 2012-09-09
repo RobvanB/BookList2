@@ -12,4 +12,6 @@
 	<string name="Title">Title</string>
 	<string name="XX">XX</string>
 	<string name="NumRec">Number of Records in DB: </string>
+	<string name="srchPre">Prepend wildcard</string>
+	<string name="srchPost">Append wildcard</string>
 </resources>

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/load_xml"
+<item android:id="@+id/RemoveKeys"
 	  android:icon="@drawable/filter36"
-	  android:title="@string/load_xml"/>
+	  android:title="@string/RemoveKeys"/>
 <item android:id="@+id/about"
 	  android:icon="@drawable/happy36"
 	  android:title="@string/about"/>	  
