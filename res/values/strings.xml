@@ -4,4 +4,12 @@
     <string name="delete">Delete</string>
     <string name="load_xml">Load Books from DC XML file</string>
 	<string name="about">About</string>
+	<string name="RemoveKeys">Remove App Keys</string>
+	<string name="Search">Search</string>
+	<string name="GetFile">Get updated XML file</string>
+	<string name="Status">Status</string>
+	<string name="Author">Author</string>
+	<string name="Title">Title</string>
+	<string name="XX">XX</string>
+	<string name="NumRec">Number of Records in DB: </string>
 </resources>

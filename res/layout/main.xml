@@ -10,7 +10,7 @@ android:padding="10dp">
     android:id="@+id/counterText"
     android:layout_width="250dp"
     android:layout_height="fill_parent"
-    android:text="Number of records in DB: " >
+    android:text="@string/NumRec" >
 
 </TextView>
 
@@ -19,7 +19,7 @@ android:id="@+id/counterVal"
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 android:layout_toRightOf="@id/counterText"
-android:text="XX">
+android:text="@string/XX">
 </TextView>
 
 <LinearLayout
@@ -37,11 +37,12 @@ android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 android:orientation="vertical"
 >
+
 <TextView
 android:id="@+id/Title"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="Title"
+android:text="@string/Title"
 >
 </TextView>
 <EditText
@@ -49,13 +50,14 @@ android:id="@+id/TitleVal"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:textSize="18sp"
+android:inputType="text"
 >
 </EditText>
 <TextView
 android:id="@+id/Author"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="Author"
+android:text="@string/Author"
 >
 </TextView>
 <EditText
@@ -63,13 +65,14 @@ android:id="@+id/AuthorVal"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:textSize="18sp"
+android:inputType="text"
 >
 </EditText>
 <TextView
 android:id="@+id/Status"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="Status"
+android:text="@string/Status"
 >
 </TextView>
 <EditText
@@ -77,20 +80,28 @@ android:id="@+id/StatusVal"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:textSize="18sp"
+android:inputType="text"
 >
 </EditText>
 <Button
 android:id="@+id/GetFile"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="Get updated XML file"
+android:text="@string/GetFile"
 >
 </Button>
 <Button
 android:id="@+id/Search"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="Search"
+android:text="@string/Search"
+>
+</Button>
+<Button
+android:id="@+id/RemoveKeys"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="@string/RemoveKeys"
 >
 </Button>
 </TableLayout>

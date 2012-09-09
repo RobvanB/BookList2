@@ -5,11 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.R.string;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -50,11 +52,12 @@ public class BookListMainAct extends Activity {
 	
 	public static final File newXml = new File(Environment.getExternalStorageDirectory() , "dcandroidexport.xml"); 
 	final static private String dbPath 	= "/dcexport.xml";
+	final static private int tstDuration = 70000 ; 
 	
 	//DropBox
 	final static private AccessType ACCESS_TYPE = AccessType.APP_FOLDER ;
-	static private String APP_KEY = "imd5mawa9ttpi7v";
-	static private String APP_SECRET = "t6u7e4we1vxnupb";
+	final static private String APP_KEY = "imd5mawa9ttpi7v";
+	final static private String APP_SECRET = "t6u7e4we1vxnupb";
 	final static private String ACCOUNT_PREFS_NAME = "prefs";
 	final static private String ACCESS_KEY_NAME = "ACCESS_KEY";
 	final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
@@ -77,8 +80,12 @@ public class BookListMainAct extends Activity {
     		//Register the onClick listener
     		getFileButton.setOnClickListener(mAddListenerGetFile);
     		
+    		Button removeKeysButton = (Button)findViewById(R.id.RemoveKeys);
+    		removeKeysButton.setOnClickListener(mAddListenerRemoveKeys);
+    		
     		//Authenticate against DropBox
     		DropBoxAuthenticate();
+    		
     	}
     	catch (Exception ex)
     	{
@@ -122,10 +129,10 @@ public class BookListMainAct extends Activity {
         }
     }
     
+    //Inflate the menu
     @Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		//Inflate the menu
 		MenuInflater menuInf = getMenuInflater();
 		menuInf.inflate(R.menu.menu, menu);
 		return true;
@@ -137,22 +144,6 @@ public class BookListMainAct extends Activity {
     {
     	switch (item.getItemId())
     	{
-//        		case R.id.load_xml: 
-//        			try
-//            		{
-//            			Intent intent = new Intent(BookListMainAct.this, LoadXML.class);
-//            			startActivity(intent);
-//            		}
-//            		catch(Exception ex)
-//            		{
-//            			Context context = getApplicationContext();
-//            			CharSequence text = ex.toString();
-//            			int duration = Toast.LENGTH_LONG ;
-//            			
-//            			Toast toast = Toast.makeText(context, text, duration);
-//            			toast.show();
-//            		}
-//            		break;
     		case R.id.about: 
     			try
         		{
@@ -173,107 +164,14 @@ public class BookListMainAct extends Activity {
     	return true;
     }
     
-    //Create an anonymous implementation of OnClickListener for getting an updated file
-    private OnClickListener mAddListenerGetFile = new OnClickListener() {
+    //Create an anonymous implementation of OnClickListener for resetting the keys
+    private OnClickListener mAddListenerRemoveKeys = new OnClickListener() {
 	
     	public void onClick(View v){
-    		new getFile().execute();
-		
-    	}
+    		removeKeys();
+    		}
     	};
-
     
-	private class getFile extends AsyncTask<Void, Integer, Boolean> 
-	{
-		private ProgressDialog dialog = new ProgressDialog(BookListMainAct.this);
-		Exception err = null;
-		
-		protected void onPreExecute()
-		{
-		   super.onPreExecute();
-		        this.dialog.setMessage("Loading...");
-		        this.dialog.show();    
-		}
-		
-		protected void onPostExecute(Boolean result)
- 		{
-			if (dialog.isShowing())
- 			{
- 				dialog.dismiss();
- 			}
-			
-			if (this.err != null)
-			{
-				Context context = getApplicationContext();
-	     		CharSequence text = err.toString();
-	     		int duration = 50000 ; //Toast.LENGTH_LONG;
-	     		
-	     		Toast toast = Toast.makeText(context, text, duration);
-	     		toast.show();
-			}
- 		}
-		
-		
-//		protected void onProgressUpdate(Integer... progress) 
-// 		{
-// 			OptionPane.showMessage("BookListMainAct, "ERROR", err.getMessage());
-// 		}
-		
-		protected Boolean doInBackground(Void... params) 
-		{
-			// Get a new XML file to load in the db
-			FileOutputStream outputStream = null;
-
-			try 
-	 		{
-				String fname = "";
-		    	outputStream = new FileOutputStream(newXml);
-		    	//Since we are using access_type=folder, the file will be in 
-		    	// /Apps/BookList2 (which is considered the root for this application
-		    	// dbPath = /dcexport.xml 
-	 		    DropboxFileInfo info = mDBApi.getFile(dbPath, null, outputStream, null);
-	 		    //Log.i("BookListLog", "The file's rev is: " + info.getMetadata().rev);
-	 		    // /path/to/new/file.txt now has stuff in it.
-//	 		    com.dropbox.client2.DropboxAPI.Entry myEntry = mDBApi.metadata("/",100, null, true, null);
-//		    	for(com.dropbox.client2.DropboxAPI.Entry e : myEntry.contents )
-//		    	{
-//		    		if (!e.isDeleted)
-//		    		{
-//		    			fname = e.fileName();
-//		    		}
-//		    	}
-	 		    
-		    	publishProgress();
-	 		} 
-			//catch (DropboxException e) 
-	 		catch (Exception ex)	
-	 		{
-//	 			Context context = getApplicationContext();
-//	     		CharSequence text = ex.toString();
-//	     		int duration = 50000 ; //Toast.LENGTH_LONG;
-//	     		
-//	     		Toast toast = Toast.makeText(context, text, duration);
-//	     		toast.show();
-	 			this.err = ex ;
-	 		} finally 
-	 		{
-	 			if (dialog.isShowing())
-	 			{
-	 				dialog.dismiss();
-	 			}
-	 		    if (outputStream != null) 
-	 		    {
-	 		        try 
-	 		        {
-	 		            outputStream.close();
-	 		        } catch (IOException e) {}
-	 		    }
-	 		}	
-	 		return true;
-		}
-	}
-    
-
     //Create an anonymous implementation of OnClickListener for the Search
     private OnClickListener mAddListenerSearch = new OnClickListener() {
     	public void onClick(View v){
@@ -333,8 +231,16 @@ public class BookListMainAct extends Activity {
     		db.close();
     	}
     };
-        
-    //Count the number of books in the DB
+    
+    //Create an anonymous implementation of OnClickListener for getting an updated XML file
+    private OnClickListener mAddListenerGetFile = new OnClickListener() {
+	
+    	public void onClick(View v){
+    		new getFile().execute();
+    		}
+    	};
+
+	//Count the number of books in the DB
     private Integer countBooks()
 	{
 		Integer counted = 0;
@@ -361,12 +267,20 @@ public class BookListMainAct extends Activity {
     private void DropBoxAuthenticate()
     {
     	SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
-    	//APP_KEY 	= prefs.getString(ACCESS_KEY_NAME, "");
-    	//APP_SECRET 	= prefs.getString(ACCESS_SECRET_NAME, "");
+    	String tokenKey 		= prefs.getString(ACCESS_KEY_NAME, "");
+    	String tokenSecret 		= prefs.getString(ACCESS_SECRET_NAME, "");
     	
+    	//Create a session
     	AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
     	AndroidAuthSession session = new AndroidAuthSession(appKeys, ACCESS_TYPE);
     	mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+    	
+    	//See if we have stored the accesstokens from a previous session
+    	if (tokenKey != "" && tokenSecret != "")
+    	{
+    		AccessTokenPair tokens 		= new AccessTokenPair(tokenKey, tokenSecret);
+    		mDBApi.getSession().setAccessTokenPair(tokens);
+    	}
     	
     	//check if we are already authenticated
     	if (session.getAccessTokenPair() == null)
@@ -376,7 +290,7 @@ public class BookListMainAct extends Activity {
     	}
     }
   
-    //Store the retrieved keys (code from DBRoulette.jar example) - DropBox
+    //Store the retrieved access keys (code from DBRoulette.jar example) - DropBox
     private void storeKeys(String key, String secret) 
     {
         // Save the access key for later
@@ -386,4 +300,142 @@ public class BookListMainAct extends Activity {
         edit.putString(ACCESS_SECRET_NAME, secret);
         edit.commit();
     }
+    
+    //Remove stored access keys
+    private void removeKeys() 
+    {
+        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
+        Editor edit = prefs.edit();
+        edit.remove(ACCESS_KEY_NAME);
+        edit.remove(ACCESS_SECRET_NAME);
+        edit.commit();
+        
+        Context context = getApplicationContext();
+		CharSequence text = "App keys cleared";
+		int duration = 60000 ; 
+		
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		
+		//Restart the main activity
+		Intent i = getApplicationContext().getPackageManager()
+				 .getLaunchIntentForPackage(getApplicationContext().getPackageName() );
+
+				 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+				 startActivity(i);
+    }
+
+     
+    // *** SubClass ***
+    //Pull the file from the dropbox server 
+  	public class getFile extends AsyncTask<Void, Integer, Boolean> 
+  	{
+  		private ProgressDialog 	dbxDialog 	= new ProgressDialog(BookListMainAct.this);
+  		public  ProgressDialog 	xmlDialog 	= new ProgressDialog(BookListMainAct.this);
+  		Exception 			   	err 		= null;
+  		DropboxFileInfo 		info 		= null;
+  		String					msg			= null;
+  		
+  		protected void onPreExecute()
+  		{
+  			super.onPreExecute();
+  	        this.dbxDialog.setMessage("Pulling file from DropBox server...");
+  	        this.dbxDialog.show();    
+  		}
+  		
+  		protected void onPostExecute(Boolean result)
+   		{
+  			if (this.err != null)
+  			{
+	  			CharSequence text = this.err.toString() ;
+	  			Toast toast 	  = Toast.makeText(getApplicationContext(), text, BookListMainAct.tstDuration);
+				toast.show();
+  			}else
+  			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(BookListMainAct.this);
+				builder.setMessage(msg).setCancelable(false);
+			    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() 
+			    {
+			    	public void onClick(DialogInterface dialog, int id) 
+		           {
+		        	   //BookListMainAct.this.finish();
+		           }
+			    });
+				AlertDialog alert = builder.create();		
+				alert.show();
+  			}
+   		}	
+  		
+  		protected void onProgressUpdate(Integer... progress) 
+   		{
+   			this.dbxDialog.setMessage("Loading new file in DataBase...");
+  		}
+  		
+  		
+
+  		protected Boolean doInBackground(Void... params) 
+  		{
+  			// Get a new XML file to load in the db
+  			FileOutputStream outputStream = null;
+
+  			try 
+  	 		{
+  		    	outputStream = new FileOutputStream(newXml);
+  		    	//Since we are using access_type=folder, the file will be in 
+  		    	// /Apps/BookList2 (which is considered the root for this application)
+  	 		    info = mDBApi.getFile(dbPath, null, outputStream, null);
+  		    	publishProgress();
+  		    	
+	   			Context context = getApplicationContext();
+	   			Toast toast		= null ;
+	   			
+	   			if (this.err == null)
+	   			{
+   				
+		   			//Now load the file into the DB
+		   			try
+	   	    		{
+	   					LoadXML loadXML = new LoadXML() ;
+	   					msg = loadXML.run(getApplicationContext());
+	   	    		}
+	   	    		catch(Exception ex)
+	   	    		{
+	   	    			CharSequence errText 	= ex.toString();
+	   	    			toast 					= Toast.makeText(context, errText, BookListMainAct.tstDuration);
+	   	    			toast.show();
+	   	    		}
+	   	     		finally
+	   	    		{
+		   	     		if (dbxDialog.isShowing())
+		 				{
+		   	 		    	dbxDialog.dismiss();
+		 				}
+	   	    		}
+	   			}
+	   			publishProgress();
+  	 		} 
+  			//catch (DropboxException e) 
+  	 		catch (Exception ex)	
+  	 		{
+  	 			this.err = ex ; //Can't use Toast as we are in a background thread - pull the error when we are back in the main UI thread
+  	 		} 
+  			finally 
+  	 		{
+  	 			if (dbxDialog.isShowing())
+  	 			{
+  	 				dbxDialog.dismiss();
+  	 			}
+  	 		    if (outputStream != null) 
+  	 		    {
+  	 		        try 
+  	 		        {
+  	 		            outputStream.close();
+  	 		        } catch (IOException e) {
+  	 		        	this.err = e;//Can't use Toast as we are in a background thread - pull the error when we are back in the main UI thread
+  	 		        }
+  	 		    }
+  	 		}	
+  	 		return true;
+  		}
+  	}
 }
