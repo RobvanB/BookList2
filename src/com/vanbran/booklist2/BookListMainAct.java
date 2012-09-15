@@ -52,16 +52,17 @@ public class BookListMainAct extends Activity {
 	public 	static final   File 	newXml 			= new File(Environment.getExternalStorageDirectory() , "dcandroidexport.xml"); 
 	final 	static private String 	dbPath 			= "/dcexport.xml";
 	final 	static private int 		tstDuration 	= 70000 ; 
+	
 	boolean							srchPreChecked	= false ;
 	boolean							srchPostChecked = false ;
 	
 	//DropBox
 	final static private AccessType ACCESS_TYPE 		= AccessType.APP_FOLDER ;
-	final static private String 	APP_KEY 			= "imd5mawa9ttpi7v";
-	final static private String 	APP_SECRET 			= "t6u7e4we1vxnupb";
 	final static private String 	ACCOUNT_PREFS_NAME 	= "prefs";
 	final static private String 	ACCESS_KEY_NAME 	= "ACCESS_KEY";
 	final static private String 	ACCESS_SECRET_NAME 	= "ACCESS_SECRET";
+		  static private String 	APPKEY				= "";
+		  static private String 	APPSEC				= "";
 	
 	private DropboxAPI<AndroidAuthSession> mDBApi;
     	
@@ -72,6 +73,12 @@ public class BookListMainAct extends Activity {
     	{
     		super.onCreate(savedInstanceState);
     		setContentView(R.layout.main);
+    		
+    		//Get the appkey and secret
+    		LoadConfig LoadC = new LoadConfig();
+    		LoadC.init(getApplicationContext());
+    		APPKEY = LoadC.AppKey();
+    		APPSEC = LoadC.AppSec();    		
     		
     		//Capture buttons from Layout
     		Button searchButton = (Button)findViewById(R.id.Search);
@@ -302,7 +309,7 @@ public class BookListMainAct extends Activity {
     	String tokenSecret 		= prefs.getString(ACCESS_SECRET_NAME, "");
     	
     	//Create a session
-    	AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
+    	AppKeyPair appKeys = new AppKeyPair(APPKEY, APPSEC);
     	AndroidAuthSession session = new AndroidAuthSession(appKeys, ACCESS_TYPE);
     	mDBApi = new DropboxAPI<AndroidAuthSession>(session);
     	

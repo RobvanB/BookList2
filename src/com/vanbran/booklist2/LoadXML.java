@@ -54,7 +54,10 @@ public class LoadXML
 		}
 		finally
 		{
-			db.close();
+			if (db != null)
+			{
+				db.close();
+			}
 			return msg ;
 		}
 		
@@ -136,7 +139,10 @@ public class LoadXML
 		}
 		finally
 		{
-			db.close();
+			if (db != null)
+			{
+				db.close();
+			}
 		}
 		
 		msg = "Upload complete. \n" + rowsSkipped + " Rows Skipped,\n" + rowsInserted 
